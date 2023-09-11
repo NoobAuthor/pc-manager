@@ -1,7 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Sidenav from "./components/Sidenav/Sidenav";
-import Header from "./components/Header/Header";
+import Sidenav from "@/components/Sidenav/Sidenav";
+import Header from "@/components/Header/Header";
+import { NextAuthProvider } from "@/components/NextAuthProvider/NextAuthProvides";
 
 export const metadata: Metadata = {
   title: "Project Manager",
@@ -16,9 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        <Sidenav />
-        <main className="ml-64 py-20 px-6">{children}</main>
+        <NextAuthProvider>
+          <main className="ml-64 py-20 px-6">
+            <Header />
+            <Sidenav />
+            {children}
+          </main>
+        </NextAuthProvider>
       </body>
     </html>
   );
