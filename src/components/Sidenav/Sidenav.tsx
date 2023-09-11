@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const navItems = [
   { link: "/", name: "Dashboard", icon: RxDashboard },
-  { link: "#", name: "Project Management", icon: FaProjectDiagram },
+  { link: "#", name: "Project Manager", icon: FaProjectDiagram },
   { link: "/ai", name: "AI Prompt", icon: LiaRobotSolid },
   { link: "/auth", name: "Auth", icon: RiLockPasswordLine },
 ];
@@ -22,7 +22,7 @@ export default function Sidenav() {
                 href={item.link}
                 className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-200"
               >
-                <item.icon className="mr-2" />
+                <item.icon />
                 <span className="ml-3">{item.name}</span>
               </Link>
             </li>

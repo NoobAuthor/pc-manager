@@ -1,12 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
+
   const { data: session } = useSession();
 
   return (
@@ -15,8 +16,8 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start">
             <Link href="/" className="flex ml-2 md:mr-24">
-              <span className="self-centered text-xl font-semibold sm:text-2xl">
-                Project Hub
+              <span className="self-center text-xl font-semibold sm:text-2xl">
+                Project Titan
               </span>
             </Link>
           </div>
@@ -38,6 +39,7 @@ export default function Header() {
                   />
                 </button>
               </div>
+
               {!session ? (
                 <></>
               ) : (
@@ -53,9 +55,9 @@ export default function Header() {
                     </div>
                     <button
                       onClick={() => signOut()}
-                      className="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Sign Out
+                      Sign out
                     </button>
                   </div>
                 )
