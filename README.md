@@ -4,17 +4,17 @@ Welcome to the Project Content Manager, an application that helps you manage and
 
 ## Features
 
-**Design Data Models with Prisma Schema:** We use Prisma Schema to define and manage our data models efficiently. This ensures a robust and scalable database structure for your project content.
+**Design Data Models with Prisma Schema:** Prisma Schema to define and manage our data models efficiently. This ensures a robust and scalable database structure for your project content.
 
-**Establishing relationships and constraints:** Prisma allows us to establish relationships and constraints between data models, ensuring data integrity and consistency.
+**Establishing relationships and constraints:** Prisma allows the establishment of relationships and constraints between data models, ensuring data integrity and consistency.
 
-**Integrating OpenAI Chat Functionality:** We've integrated OpenAI's chat functionality to provide advanced conversational capabilities within the application. Engage in dynamic and interactive conversations seamlessly.
+**Integrating OpenAI Chat Functionality:** Integrated OpenAI's chat functionality to provide advanced conversational capabilities within the application. Engage in dynamic and interactive conversations seamlessly.
 
-**Implementing drag-and-drop functionality:** Our application supports drag-and-drop functionality, making it easy to organize and manage your project content effortlessly.
+**Implementing drag-and-drop functionality:** The application supports drag-and-drop functionality, making it easy to organize and manage your project content effortlessly.
 
-**Tailwind CSS Styling:** We've utilized Tailwind CSS to create a visually appealing and responsive user interface. Customize the look and feel of the application to match your preferences.
+**Tailwind CSS Styling:** Tailwind CSS to create a visually appealing and responsive user interface. Customize the look and feel of the application to match your preferences.
 
-**Next.JS Middleware:** We've built this application using Next.js, leveraging its middleware capabilities for efficient routing and rendering. Enjoy fast-loading pages and a seamless user experience.
+**Next.JS Middleware:** This application was built with Next.js, leveraging its middleware capabilities for efficient routing and rendering. Enjoy fast-loading pages and a seamless user experience.
 
 ## Getting Started
 
