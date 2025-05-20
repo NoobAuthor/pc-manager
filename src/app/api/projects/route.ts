@@ -1,45 +1,75 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { Project } from "@models/project";
 
-import { authOptions } from '@/libs/auth';
-import prisma from '@/libs/prisma';
+interface CreateProjectRequest {
+  name: string;
+  description: string;
+  slug: string;
+}
 
-export async function GET(req: Request, res: Response) {
+interface UpdateProjectRequest {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+}
+
+interface ErrorResponse {
+  error: string;
+}
+export async function GET(
+  req: NextRequest,
+): Promise<NextResponse<Project[] | ErrorResponse>> {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return new NextResponse('Not Authenticated', { status: 500 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const projects = await prisma.project.findMany();
+    const projects = await prisma.project.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
     return NextResponse.json(projects, {
       status: 200,
-      statusText: 'Successful',
+      statusText: "Successful",
     });
   } catch (error) {
-    console.log(error);
-    return new NextResponse('Cannot fetch data', { status: 500 });
+    console.error("Failed to fetch projects:", error);
+    return NextResponse.json({ error: "Cannot fetch data" }, { status: 500 });
   }
 }
 
-export async function POST(req: Request, res: Response) {
+export async function POST(
+  req: NextRequest,
+): Promise<NextResponse<Project | ErrorResponse>> {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return new NextResponse('Not Authenticated', { status: 500 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const userId = session.user?.id;
-
-  const { description, name, slug } = await req.json();
-
-  if (!description || !name || !slug) {
-    return new NextResponse('Please all fields are required', { status: 400 });
-  }
+  const userId = session.user.id;
 
   try {
+    const { description, name, slug } =
+      (await req.json()) as CreateProjectRequest;
+
+    if (!description || !name || !slug) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
+    }
     const createdProject = await prisma.project.create({
       data: {
         description,
@@ -50,23 +80,29 @@ export async function POST(req: Request, res: Response) {
     });
 
     return NextResponse.json(createdProject, {
-      status: 200,
-      statusText: 'Project Created',
+      status: 201,
+      statusText: "Project Created",
     });
   } catch (error) {
-    console.log(error);
-    return new NextResponse('Creation Error', { status: 500 });
+    console.error("Failed to create project:", error);
+    return NextResponse.json({ error: "Creation Error" }, { status: 500 });
   }
 }
 
-export async function PATCH(req: Request, res: Response) {
-  const { description, name, id, slug } = await req.json();
-
-  if (!description || !name || !id || !slug) {
-    return new NextResponse('Please all fields are required', { status: 400 });
-  }
-
+export async function PATCH(
+  req: NextRequest,
+): Promise<NextResponse<Project | ErrorResponse>> {
   try {
+    const { description, name, id, slug } =
+      (await req.json()) as UpdateProjectRequest;
+
+    if (!description || !name || !id || !slug) {
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400 },
+      );
+    }
+
     const updatedProject = await prisma.project.update({
       where: { id },
       data: { description, name, slug },
@@ -74,10 +110,10 @@ export async function PATCH(req: Request, res: Response) {
 
     return NextResponse.json(updatedProject, {
       status: 200,
-      statusText: 'Successful',
+      statusText: "Successful",
     });
   } catch (error) {
-    console.log(error);
-    return new NextResponse('Error Updating', { status: 500 });
+    console.error("Failed to update project:", error);
+    return NextResponse.json({ error: "Error Updating" }, { status: 500 });
   }
 }
