@@ -6,10 +6,12 @@ export default function AnimatedSpinner() {
       viewBox="0 0 50 50"
       xmlns="http://www.w3.org/2000/svg"
       stroke="#000000"
+      aria-label="Loading indicator"
+      role="img"
     >
-      <g fill="none" fill-rule="evenodd">
-        <g transform="translate(1 1)" stroke-width="2">
-          <circle stroke-opacity=".5" cx="24" cy="24" r="6">
+      <g fill="none" fillRule="evenodd">
+        <g transform="translate(1 1)" strokeWidth="2">
+          <circle strokeOpacity=".5" cx="24" cy="24" r="6">
             <animate
               attributeName="r"
               begin="1.5s"
@@ -35,7 +37,7 @@ export default function AnimatedSpinner() {
               repeatCount="indefinite"
             />
           </circle>
-          <circle stroke-opacity=".5" cx="24" cy="24" r="22">
+          <circle strokeOpacity=".5" cx="24" cy="24" r="22">
             <animate
               attributeName="r"
               begin="3s"
@@ -61,7 +63,7 @@ export default function AnimatedSpinner() {
               repeatCount="indefinite"
             />
           </circle>
-          <circle stroke-opacity=".5" cx="24" cy="24" r="22">
+          <circle strokeOpacity=".5" cx="24" cy="24" r="22">
             <animate
               attributeName="r"
               begin="4.5s"

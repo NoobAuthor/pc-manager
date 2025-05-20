@@ -1,81 +1,140 @@
-import { ChangeEvent, FC, FormEvent } from 'react';
-import { MdCancel } from 'react-icons/md';
+"use client";
 
-import Input from '../Input/Input';
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import slugify from "slugify";
+import { z } from "zod";
+
+// Define a schema for form validation
+const projectSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  description: z
+    .string()
+    .min(1, "Description is required")
+    .max(500, "Description is too long"),
+});
+
+type FormValues = z.infer<typeof projectSchema>;
 
 interface ProjectFormProps {
-  isVisible: boolean;
-  toggleProjectForm: () => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  formData: { name: string; description: string };
-  isCreateProject: boolean;
-  isEditProject: boolean;
+  projectId?: string;
+  defaultValues?: {
+    name: string;
+    description: string;
+    slug: string;
+  };
+  onSuccess?: () => void;
 }
 
-const ProjectForm: FC<ProjectFormProps> = props => {
+export default function ProjectForm({
+  projectId,
+  defaultValues,
+  onSuccess,
+}: ProjectFormProps) {
+  const router = useRouter();
+  const isEditMode = !!projectId;
+
   const {
-    isVisible,
-    toggleProjectForm,
+    register,
     handleSubmit,
-    onChange,
-    formData,
-    isCreateProject,
-    isEditProject,
-  } = props;
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormValues>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: defaultValues || {
+      name: "",
+      description: "",
+    },
+  });
+
+  async function onSubmit(data: FormValues) {
+    try {
+      const slug = slugify(data.name.toLowerCase());
+      const payload = {
+        ...data,
+        slug,
+      };
+
+      if (isEditMode) {
+        await axios.patch("/api/projects", {
+          ...payload,
+          id: projectId,
+        });
+        toast.success("Project updated successfully");
+      } else {
+        await axios.post("/api/projects", payload);
+        toast.success("Project created successfully");
+        reset();
+      }
+
+      router.refresh();
+
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Failed to save project:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  }
 
   return (
-    <div
-      className={`absolute w-80 z-[55] bg-white rounded-lg shadow ${
-        isVisible
-          ? 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700'
-          : '-translate-y-[150%] left-1/2 -translate-x-1/2'
-      }`}
-    >
-      <button
-        type='button'
-        className='absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center'
-      >
-        <MdCancel onClick={toggleProjectForm} className='text-3xl' />
-      </button>
-
-      <div className='px-6 py-6 lg:px-8'>
-        <h3 className='mb-4 text-xl font-medium text-gray-900'>Add Project</h3>
-        <form className='space-y-6' onSubmit={handleSubmit}>
-          <Input
-            label='Name'
-            onChange={onChange}
-            placeholder='name'
-            type='text'
-            value={formData.name}
-            name='name'
-            required
-          />
-          <Input
-            label='Description'
-            onChange={onChange}
-            placeholder='Description'
-            type='text'
-            value={formData.description}
-            name='description'
-            required
-          />
-
-          <button
-            disabled={isCreateProject}
-            type='submit'
-            className='disabled:bg-gray-300 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
-          >
-            {isCreateProject
-              ? 'CREATING...'
-              : isEditProject
-              ? 'EDIT'
-              : 'CREATE'}
-          </button>
-        </form>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="space-y-2">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Name
+        </label>
+        <input
+          id="name"
+          {...register("name")}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Project name"
+        />
+        {errors.name && (
+          <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
+        )}
       </div>
-    </div>
-  );
-};
 
-export default ProjectForm;
+      <div className="space-y-2">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Description
+        </label>
+        <textarea
+          id="description"
+          {...register("description")}
+          rows={4}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Project description"
+        />
+        {errors.description && (
+          <p className="mt-1 text-xs text-red-600">
+            {errors.description.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="inline-flex w-full justify-center rounded-md bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+        >
+          {isSubmitting
+            ? "Saving..."
+            : isEditMode
+              ? "Update Project"
+              : "Create Project"}
+        </button>
+      </div>
+    </form>
+  );
+}

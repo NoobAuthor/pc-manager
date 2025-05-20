@@ -1,43 +1,125 @@
 # Project Content Manager
 
-Welcome to the Project Content Manager, an application that helps you manage and organize your project content with a variety of exciting features. This README.md provides an overview of the application and its technologies.
+A modern, full-stack project management application built with **Next.js**, **Prisma**, **MongoDB**, **Tailwind CSS**, and **OpenAI** integration. Manage projects, boards, and features with real-time drag-and-drop, authentication, and AI-powered chat.
 
-## Features
+---
 
-**Design Data Models with Prisma Schema:** Prisma Schema to define and manage our data models efficiently. This ensures a robust and scalable database structure for your project content.
+## 🚀 Features
 
-**Establishing relationships and constraints:** Prisma allows the establishment of relationships and constraints between data models, ensuring data integrity and consistency.
+- **User Authentication:** Secure login via GitHub using NextAuth.
+- **Project Management:** Create, edit, and organize projects.
+- **Boards & Features:** Kanban-style boards with sortable features (drag-and-drop).
+- **AI Chat:** Integrated OpenAI chat for project assistance.
+- **Responsive UI:** Built with Tailwind CSS for a modern look.
+- **Accessible Components:** All UI components are accessible and keyboard-friendly.
+- **API Routes:** RESTful API endpoints for all core resources.
+- **Testing:** Unit and integration tests with Jest and React Testing Library.
+- **Consistent Formatting:** Prettier and ESLint for code quality.
 
-**Integrating OpenAI Chat Functionality:** Integrated OpenAI's chat functionality to provide advanced conversational capabilities within the application. Engage in dynamic and interactive conversations seamlessly.
+---
 
-**Implementing drag-and-drop functionality:** The application supports drag-and-drop functionality, making it easy to organize and manage your project content effortlessly.
+## 🏗️ Tech Stack
 
-**Tailwind CSS Styling:** Tailwind CSS to create a visually appealing and responsive user interface. Customize the look and feel of the application to match your preferences.
+- **Frontend:** Next.js 15, React 18, Tailwind CSS
+- **Backend:** Next.js API Routes, Prisma ORM, MongoDB
+- **Authentication:** NextAuth.js (GitHub provider)
+- **Drag & Drop:** @dnd-kit/core, @dnd-kit/sortable
+- **AI Integration:** OpenAI API
+- **Testing:** Jest, React Testing Library, @testing-library/jest-dom
+- **Type Checking:** TypeScript
 
-**Next.JS Middleware:** This application was built with Next.js, leveraging its middleware capabilities for efficient routing and rendering. Enjoy fast-loading pages and a seamless user experience.
+---
 
-## Getting Started
+## 📦 Getting Started
 
-To get started with the Project Content Manager, follow these steps:
+### 1. Clone the Repository
 
-1. Clone this repository to your local machine.
+```bash
+git clone https://github.com/your-username/pc-manager.git
+cd pc-manager
 
-2. Install the project dependencies.
-   
-4. Configure your database connection in the Prisma Schema file.
+```
 
-5. Set up your OpenAI API credentials for chat functionality.
+### 2. Install Dependencies
 
-6. Start the application.
+```bash
+npm install
+```
 
-7. Access the application in your web browser at `http://localhost:3000`.
+### 3. Configure Environment Variables
 
-## Usage
+Create a new `.env` file in the root directory and set the following:
 
-Once you have the application up and running, use the drag-and-drop interface to manage your project content, create relationships between items, and engage in interactive conversations using the OpenAI chat functionality. Tailor the styling to your liking with Tailwind CSS.
+```
+DATABASE_URL=your_mongodb_connection_string
+GITHUB_ID=your_github_oauth_client_id
+GITHUB_SECRET=your_github_oauth_client_secret
+NEXTAUTH_SECRET=your_nextauth_secret
+OPEN_API_KEY=your_openai_api_key
 
-## License
+```
 
-This project is licensed under the [MIT License](LICENSE).
+### 4. Set Up the Database
 
+Generate the Prisma client and push the schema to your MongoDB database:
 
+```
+npx prisma generate
+npx prisma db push
+```
+
+### 5. Run the Development Server
+
+```
+npm run dev
+```
+
+Visit <http://localhost:3000> in your browser.
+
+## 🧪 Running Tests
+
+- All tests:
+  `npm test`
+- Watch mode:
+  `npm run test:watch`
+
+## 📝 Key Concepts
+
+Authentication
+
+- Uses NextAuth.js with GitHub as the OAuth provider.
+- Session includes the user's unique ID for secure resource access.
+  Data Modeling
+- Prisma defines models for User, Project, ProjectBoard, Feature, and AiChat.
+- Relationships are enforced at the database level.
+  Drag-and-Drop
+- Powered by @dnd-kit for modern, accessible drag-and-drop.
+- Boards and features can be reordered and moved between columns.
+  AI Chat
+- Integrated with OpenAI's GPT model for project-related queries.
+- Chat history is stored per user.
+  Testing
+- Jest and React Testing Library for robust unit and integration tests.
+- Custom matchers from @testing-library/jest-dom for better assertions.
+  Formatting & Linting
+- Prettier for code formatting.
+- ESLint for code quality and best practices.
+
+## 🛠️ Customazation
+
+- Styling: Modify tailwind.config.ts for custom themes.
+- Database: Update prisma/schema.prisma for new models or fields.
+- Providers: Add more OAuth providers in src/libs/auth.ts if needed.
+- AI Model: Change the OpenAI model in src/app/api/ai/route.ts.
+
+## 🤝 Contributing
+
+- Fork the repository
+- Create a new branch (git checkout -b feature/your-feature)
+- Commit your changes (git commit -am 'Add new feature')
+- Push to the branch (git push origin feature/your-feature)
+- Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.

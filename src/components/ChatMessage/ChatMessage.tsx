@@ -1,30 +1,40 @@
-import { FC } from 'react';
-import { FaRobot } from 'react-icons/fa';
+import { FC } from "react";
+import { FaRobot } from "react-icons/fa";
+import Image from "next/image";
 
 type Props = {
   text: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   userImage: string;
 };
 
-const ChatMessage: FC<Props> = props => {
-  const { role, text, userImage } = props;
+const ChatMessage: FC<Props> = ({ role, text, userImage }) => {
+  const isUser = role === "user";
 
   return (
-    <>
-      {role === 'user' && (
-        <div className='bg-white p-4 rounded-lg flex gap-4 items-center whitespace-pre-wrap'>
-          <img src={userImage} alt='user' className='w-8 h-8' />
-          <p className='text-gray-700'>{text}</p>
-        </div>
+    <article
+      className={`${isUser ? "bg-white" : "bg-gray-100 mb-6"} p-4 rounded-lg flex gap-4 items-start whitespace-pre-wrap`}
+      aria-label={`${isUser ? "User" : "Assistant"} message`}
+    >
+      {isUser ? (
+        <Image
+          src={userImage}
+          alt="User profile"
+          width={32}
+          height={32}
+          className="rounded-full"
+        />
+      ) : (
+        <FaRobot className="text-3xl text-blue-600" aria-hidden="true" />
       )}
-      {role === 'assistant' && (
-        <div className='bg-gray-100 mb-6 p-4 rounded-lg flex gap-4 items-center whitespace-pre-wrap'>
-          <FaRobot className='text-[10rem]' />
-          <p className="text-gray-700">{text}</p>
-        </div>
-      )}
-    </>
+
+      <div>
+        <span className="sr-only">
+          {isUser ? "You wrote:" : "Assistant replied:"}
+        </span>
+        <p className="text-gray-700">{text}</p>
+      </div>
+    </article>
   );
 };
 
