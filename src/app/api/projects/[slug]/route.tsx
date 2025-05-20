@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
-import { Project } from "@/types/project";
+import { Project } from "@/models/project";
 
 interface RouteParams {
   params: {

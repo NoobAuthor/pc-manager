@@ -5,7 +5,7 @@ export type Project = {
   slug: string;
   createdAt: Date;
   updatedAt: Date;
-  projectBoards: ProjectBoard[];
+  projectBoards?: ProjectBoard[]; // Made optional with ? symbol
 };
 
 type ProjectBoard = {
@@ -26,7 +26,7 @@ export interface Feature {
   name: string;
   slug: string;
   description: string;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  priority: "LOW" | "MEDIUM" | "HIGH";
   finishDate: Date;
   order: number;
   projectBoardId: string;

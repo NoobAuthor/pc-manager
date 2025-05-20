@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { Project } from "@models/project";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/libs/auth"; // Fixed from @/lib/auth
+import prisma from "@/libs/prisma"; // Fixed from @/lib/prisma
+import { Project } from "@/models/project"; // Fixed from @models/project (missing slash)
 
 interface CreateProjectRequest {
   name: string;
