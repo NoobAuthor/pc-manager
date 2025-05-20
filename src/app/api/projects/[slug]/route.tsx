@@ -1,8 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import prisma from "@/libs/prisma";
+import { Project } from "@/types/project";
 
-import prisma from '@/libs/prisma';
+interface RouteParams {
+  params: {
+    slug: string;
+  };
+}
 
-export async function GET(req: Request, { params }: any) {
+export async function GET(
+  req: Request,
+  { params }: RouteParams,
+): Promise<NextResponse<Project | { error: string }>> {
   try {
     const project = await prisma.project.findUnique({
       where: { slug: params.slug },
@@ -15,11 +24,16 @@ export async function GET(req: Request, { params }: any) {
       },
     });
 
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
     return NextResponse.json(project, {
       status: 200,
-      statusText: 'Successful',
+      statusText: "Successful",
     });
   } catch (error) {
-    return new NextResponse('Cannot fetch data', { status: 500 });
+    console.error("Failed to fetch project", error);
+    return NextResponse.json({ error: "Cannot fetch data" }, { status: 500 });
   }
 }
